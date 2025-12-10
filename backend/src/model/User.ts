@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import { UserDocument } from "./User.dto.js";
 
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema<UserDocument>(
   {
     fullName: {
       type: String,
@@ -58,6 +59,14 @@ userSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+userSchema.methods.matchPassword = async function (enteredPassword: string) {
+  const isPasswordMatched = await bcrypt.compare(
+    enteredPassword,
+    this.password
+  );
+  return isPasswordMatched;
+};
 
 const User = mongoose.model("User", userSchema);
 
