@@ -2,11 +2,12 @@
   "name": "globotalk-backend",
   "version": "1.0.0",
   "description": "Backend Server for GloboTalk",
-  "main": "index.js",
+  "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "s": "cls && nodemon server.js",
-    "start": "node server.js"
+    "s": "cls && nodemon --watch src --exec node --loader ts-node/esm src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "stream-chat": "^9.27.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^24.10.2",
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
