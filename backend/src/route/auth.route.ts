@@ -3,6 +3,9 @@ import { LogIn, LogOut, SignUp } from "../controller/auth.controller.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/signup", SignUp).get("/login", LogIn).get("/logout", LogOut);
+authRouter
+  .post("/signup", SignUp)
+  .post("/login", LogIn)
+  .post("/logout", LogOut);
 
 export default authRouter;

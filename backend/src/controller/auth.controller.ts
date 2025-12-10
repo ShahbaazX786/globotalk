@@ -32,7 +32,7 @@ const SignUp = async (req: Request, res: Response) => {
     const idx = Math.floor(Math.random() * 100) + 1;
     const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
 
-    const newUser = User.create({
+    const newUser = await User.create({
       fullName,
       email,
       password,
@@ -61,11 +61,49 @@ const SignUp = async (req: Request, res: Response) => {
   }
 };
 
-const LogIn = async (_req, res) => {
-  res.send("LogIn");
+const LogIn = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json({ message: "Error:All Fields are required" });
+
+    const user = await User.findOne({ email });
+    if (!user)
+      return res
+        .status(401)
+        .json({ message: "Error:Invalid email or password" });
+
+    const isPasswordCorrect = await user.matchPassword(password);
+    if (!isPasswordCorrect)
+      return res
+        .status(401)
+        .json({ message: "Error:Invalid email or password" });
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+      expiresIn: "7d",
+    });
+    res.cookie("jwt", token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "User logged in sucessfully",
+      token,
+      user,
+    });
+  } catch (error) {
+    console.log("Error in login controller", error);
+    res.status(500).json({ message: "Server Error" });
+  }
 };
-const LogOut = async (_req, res) => {
-  res.send("LogOut");
+
+const LogOut = async (_req: Request, res: Response) => {
+  res.clearCookie("jwt");
+  res.status(200).json({ success: true, message: "Logged out sucessfully" });
 };
 
 export { LogIn, LogOut, SignUp };
