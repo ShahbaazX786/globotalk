@@ -11,6 +11,7 @@ app.get("/", (_req, res) => {
   res.send("Bismillah");
 });
 
+app.use(express.json());
 app.use("/api/v1/auth", authRoutes);
 
 app.listen(PORT, async () => {
