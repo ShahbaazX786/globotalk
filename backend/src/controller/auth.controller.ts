@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import { upsertStreamUser } from "../lib/stream.js";
+import { addUserToStream, generateAvatar, generateJWT } from "../lib/utils.js";
 import User from "../model/User.js";
 
 const SignUp = async (req: Request, res: Response) => {
@@ -30,38 +29,17 @@ const SignUp = async (req: Request, res: Response) => {
       });
     }
 
-    const idx = Math.floor(Math.random() * 100) + 1;
-    const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-
+    const avatar = generateAvatar();
     const newUser = await User.create({
       fullName,
       email,
       password,
-      profilePic: randomAvatar,
+      profilePic: avatar,
     });
 
-    try {
-      await upsertStreamUser({
-        id: newUser._id.toString(),
-        name: newUser.fullName,
-        image: newUser.profilePic || "",
-      });
-      console.log(`Stream User created for ${newUser.fullName}`);
-    } catch (error) {
-      console.log("Error creating stream user:", error);
-    }
+    await addUserToStream(newUser);
 
-    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET!, {
-      expiresIn: "7d",
-    });
-
-    res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
-    });
-
+    const token = generateJWT(newUser._id, res);
     res.status(201).json({
       success: true,
       message: "User has been created sucessfully",
@@ -91,16 +69,7 @@ const LogIn = async (req: Request, res: Response) => {
         .status(401)
         .json({ message: "Error:Invalid email or password" });
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
-      expiresIn: "7d",
-    });
-    res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
-    });
-
+    const token = generateJWT(user._id, res);
     res.status(201).json({
       success: true,
       message: "User logged in sucessfully",
