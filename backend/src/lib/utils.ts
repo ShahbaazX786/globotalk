@@ -23,17 +23,23 @@ const generateJWT = (userId: any, res: Response) => {
   return token;
 };
 
-const addUserToStream = async (newUser: any) => {
+const addUserToStream = async (newUser: any, type: string) => {
+  const msg = type === "update" ? "Stream User Update" : "Stream User Create";
   try {
     await upsertStreamUser({
       id: newUser._id.toString(),
       name: newUser.fullName,
       image: newUser.profilePic || "",
     });
-    console.log(`Stream User created for ${newUser.fullName}`);
+    console.log(`STREAM: ${msg} for ${newUser.fullName}`);
   } catch (error) {
-    console.log("Error creating stream user:", error);
+    console.log("Error while ${msg}:", error);
   }
 };
 
-export { addUserToStream, generateAvatar, generateJWT };
+const decodeToken = (token: string) => {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+  return decoded;
+};
+
+export { addUserToStream, decodeToken, generateAvatar, generateJWT };
