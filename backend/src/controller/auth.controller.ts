@@ -37,7 +37,7 @@ const SignUp = async (req: Request, res: Response) => {
       profilePic: avatar,
     });
 
-    await addUserToStream(newUser);
+    await addUserToStream(newUser, "create");
 
     const token = generateJWT(newUser._id, res);
     res.status(201).json({
@@ -87,4 +87,51 @@ const LogOut = async (_req: Request, res: Response) => {
   res.status(200).json({ success: true, message: "Logged out sucessfully" });
 };
 
+const onBoard = async (req: any, res: Response) => {
+  try {
+    const userId = req.user._id;
+    const { fullName, bio, nativeLanguage, learningLanguage, location } =
+      req.body;
+
+    if (
+      !fullName ||
+      !bio ||
+      !nativeLanguage ||
+      !learningLanguage ||
+      !location
+    ) {
+      return res.status(400).json({
+        message: "All fields are required",
+        missingFields: [
+          !fullName && "fullName",
+          !bio && "bio",
+          !nativeLanguage && "nativeLanguage",
+          !learningLanguage && "learningLanguage",
+          !location && "location",
+        ].filter(Boolean),
+      });
+    }
+
+    const userUpdated = await User.findByIdAndUpdate(
+      userId,
+      { ...req.body, isOnboarded: true },
+      { new: true }
+    );
+    if (!userUpdated)
+      return res.status(404).json({ message: "User not found" });
+
+    await addUserToStream(userUpdated, "update");
+
+    res.status(200).json({
+      success: true,
+      message: "User Updated sucessfully",
+      user: userUpdated,
+    });
+  } catch (error) {
+    console.error("Onboarding Error:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 export { LogIn, LogOut, SignUp };
+export { onBoard };
