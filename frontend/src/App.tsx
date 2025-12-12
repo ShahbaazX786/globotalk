@@ -8,7 +8,7 @@ import ChatPage from "./pages/Communication/ChatPage";
 import NotificationsPage from "./pages/Communication/NotificationsPage";
 import HomePage from "./pages/HomePage";
 import { useQuery } from "@tanstack/react-query";
-import API from "./lib/api";
+import API from "./lib/api/api.config";
 
 function App() {
   const { data: authData } = useQuery({
