@@ -15,7 +15,11 @@ const SignUpPage = () => {
   });
   const formErrors = signupForm.formState.errors;
 
-  const signUpMutation = useMutation({
+  const {
+    mutate: signUpMutation,
+    isPending,
+    error,
+  } = useMutation({
     mutationFn: (data: z.infer<typeof signupFormSchema>) => signupUser(data),
     onMutate: () => {
       toast.loading("Creating Your Account");
@@ -34,7 +38,7 @@ const SignUpPage = () => {
   });
 
   const onFormSubmit = (data: z.infer<typeof signupFormSchema>) => {
-    signUpMutation.mutate(data);
+    signUpMutation(data);
     console.log(data);
   };
 
@@ -54,6 +58,12 @@ const SignUpPage = () => {
               GloboTalk
             </span>
           </div>
+
+          {error && (
+            <div className="alert alert-error mb-4">
+              <span>{error?.response?.data?.message}</span>
+            </div>
+          )}
 
           <div className="w-full">
             <form onSubmit={signupForm.handleSubmit(onFormSubmit)}>
@@ -159,7 +169,7 @@ const SignUpPage = () => {
                 </div>
               </div>
               <button className="btn btn-primary w-full" type="submit">
-                Create Account
+                {isPending ? "Signing Up..." : "Create Account"}
               </button>
 
               <div className="text-center mt-4">
