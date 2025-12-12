@@ -1,12 +1,19 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ShipWheelIcon } from "lucide-react";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router";
+import z from "zod";
+import { signupFormSchema } from "../../lib/schema/signup.schema";
 
 const SignUpPage = () => {
-  const [signupData, setSignupData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
+  const signupForm = useForm<z.infer<typeof signupFormSchema>>({
+    resolver: zodResolver(signupFormSchema),
   });
+
+  const onFormSubmit = (data: z.infer<typeof signupFormSchema>) => {
+    // signupMutation.mutate(data);
+    console.log(data);
+  };
 
   return (
     <section
@@ -26,7 +33,91 @@ const SignUpPage = () => {
           </div>
 
           <div className="w-full">
-            <form></form>
+            <form onSubmit={signupForm.handleSubmit(onFormSubmit)}>
+              <div>
+                <h2 className="text-xl font-semibold">Create an account</h2>
+                <p className="text-sm opacity-75">
+                  Join GloboTalk and start your language learning adventure!
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <div className="form-control w-full">
+                  <label htmlFor="fullName" className="label">
+                    <span className="label-text">Full Name</span>
+                  </label>
+                  <input
+                    id="fullName"
+                    placeholder="Son Goku"
+                    type="text"
+                    className="input input-bordered w-full"
+                    {...signupForm.register("fullName")}
+                  />
+                </div>
+
+                <div className="form-control w-full">
+                  <label htmlFor="email" className="label">
+                    <span className="label-text">Email</span>
+                  </label>
+                  <input
+                    id="email"
+                    placeholder="songoku@dbz.com"
+                    type="email"
+                    className="input input-bordered w-full"
+                    {...signupForm.register("email")}
+                  />
+                </div>
+
+                <div className="form-control w-full">
+                  <label htmlFor="password" className="label">
+                    <span className="label-text">Password</span>
+                  </label>
+                  <input
+                    id="password"
+                    placeholder="SuperSaiyan4"
+                    type="password"
+                    className="input input-bordered w-full"
+                    {...signupForm.register("password")}
+                  />
+                </div>
+
+                <div className="form-control">
+                  <label
+                    htmlFor="termsAndConditions"
+                    className="label cursor-pointer justify-start gap-2"
+                  >
+                    <input
+                      id="termsAndConditions"
+                      placeholder="SuperSaiyan4"
+                      type="checkbox"
+                      className="checkbox checkbox-sm"
+                    />
+                    <span className="text-xs leading-tight">
+                      I agree to the{" "}
+                      <span className="text-primary hover:underline">
+                        terms of service
+                      </span>{" "}
+                      and{" "}
+                      <span className="text-primary hover:underline">
+                        privacy policy
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <button className="btn btn-primary w-full" type="submit">
+                Create Account
+              </button>
+
+              <div className="text-center mt-4">
+                <p className="text-sm">
+                  Already have an account{" "}
+                  <Link to={"/login"} className="text-primary hover:underline">
+                    Sign In
+                  </Link>
+                </p>
+              </div>
+            </form>
           </div>
         </section>
         <section
