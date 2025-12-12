@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ShipWheelIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -14,6 +14,7 @@ const SignUpPage = () => {
     resolver: zodResolver(signupFormSchema),
   });
   const formErrors = signupForm.formState.errors;
+  const queryClient = useQueryClient();
 
   const {
     mutate: signUpMutation,
@@ -29,6 +30,7 @@ const SignUpPage = () => {
         toast.dismiss();
         toast.success("Account Created Sucessfully!");
       }
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
     onError: (err: any) => {
       toast.dismiss();
