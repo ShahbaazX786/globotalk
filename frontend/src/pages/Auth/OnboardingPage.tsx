@@ -6,31 +6,31 @@ import {
   ShipWheelIcon,
   ShuffleIcon,
 } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import type z from "zod";
 import useAuthUser from "../../lib/hooks/useAuthUser";
 import { useOnboarding } from "../../lib/hooks/useMutations";
 import onboardingFormSchema from "../../lib/schema/onboarding.schema";
+import { useThemeStore } from "../../lib/store/theme.store";
 import { LANGUAGES } from "../../utils/constants";
 
 const OnboardingPage = () => {
+  const { currentTheme } = useThemeStore();
   const { authUser } = useAuthUser();
-  console.log(authUser);
-  const [formState, setFormState] = useState({
-    fullName: authUser?.fullName,
-    profilePic: authUser?.profilePic,
-    bio: authUser?.bio,
-    nativeLanguage: authUser?.nativeLanguage,
-    learningLanguage: authUser?.learningLanguage,
-    location: authUser?.location,
-  });
 
   const { isPending, onboardMutation } = useOnboarding();
 
   const onboardingForm = useForm<z.infer<typeof onboardingFormSchema>>({
     resolver: zodResolver(onboardingFormSchema),
+    defaultValues: {
+      fullName: authUser?.fullName ?? "",
+      profilePic: authUser?.profilePic ?? "",
+      bio: authUser?.bio ?? "",
+      nativeLanguage: authUser?.nativeLanguage ?? "",
+      learningLanguage: authUser?.learningLanguage ?? "",
+      location: authUser?.location ?? "",
+    },
   });
 
   const onFormSubmit = (data: z.infer<typeof onboardingFormSchema>) => {
@@ -40,13 +40,15 @@ const OnboardingPage = () => {
   const generateRandomAvatar = () => {
     const idx = Math.floor(Math.random() * 100) + 1;
     const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-    setFormState({ ...formState, profilePic: randomAvatar });
+    onboardingForm.setValue("profilePic", randomAvatar, {
+      shouldValidate: true,
+    });
     toast.success("Random Profile Picture Generated");
   };
 
   return (
     <section
-      data-theme="night"
+      data-theme={currentTheme}
       id="OnboardingPage"
       className="min-h-screen bg-base-100 flex justify-center items-center p-4"
     >
@@ -62,9 +64,9 @@ const OnboardingPage = () => {
           >
             <div className="flex flex-col justify-center items-center space-y-4">
               <div className="size-32 rounded-full bg-base-300 overflow-hidden">
-                {formState.profilePic ? (
+                {onboardingForm.getValues("profilePic") ? (
                   <img
-                    src={formState.profilePic}
+                    src={onboardingForm.getValues("profilePic")}
                     alt="Profile Picture"
                     className="w-full h-full object-cover"
                   />

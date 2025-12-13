@@ -88,6 +88,7 @@ const useLogout = () => {
 
 const useOnboarding = () => {
   const queryClient = useQueryClient();
+
   const { mutate, isPending, error } = useMutation({
     mutationFn: (data: z.infer<typeof onboardingFormSchema>) =>
       completeOnboarding(data),
@@ -100,6 +101,11 @@ const useOnboarding = () => {
         toast.success("Profile Updated Sucessfully!");
       }
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
+    },
+    onError: (err: any) => {
+      toast.dismiss();
+      toast.error(err?.response?.data?.message);
+      console.error("Error while onboarding user:", err);
     },
   });
 
