@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import { addUserToStream, generateAvatar, generateJWT } from "../lib/utils.js";
 import User from "../model/User.js";
 
+interface RequestWithUser extends Request {
+  user?: UserDocument;
+}
+
 const SignUp = async (req: Request, res: Response) => {
   const { fullName, email, password } = req.body;
   try {
@@ -133,5 +137,9 @@ const onBoard = async (req: any, res: Response) => {
   }
 };
 
+const isAuth = (req: RequestWithUser, res: Response) => {
+  res.status(200).json({ succes: true, user: req.user });
+};
+
 export { LogIn, LogOut, SignUp };
-export { onBoard };
+export { onBoard, isAuth };

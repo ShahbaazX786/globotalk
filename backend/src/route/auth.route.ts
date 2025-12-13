@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  isAuth,
   LogIn,
   LogOut,
   onBoard,
@@ -15,4 +16,5 @@ authRouter
   .post("/logout", LogOut)
   .post("/onboard", protectRoute, onBoard);
 
+authRouter.get("/me", protectRoute, isAuth);
 export default authRouter;
