@@ -5,9 +5,11 @@ import { Link } from "react-router";
 import z from "zod";
 import { useSignup } from "../../lib/hooks/useMutations";
 import signupFormSchema from "../../lib/schema/signup.schema";
+import { useThemeStore } from "../../lib/store/theme.store";
 import { cn } from "../../utils/classMerge";
 
 const SignUpPage = () => {
+  const { currentTheme } = useThemeStore();
   const signupForm = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
   });
@@ -22,7 +24,7 @@ const SignUpPage = () => {
   return (
     <section
       className="w-full h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
-      data-theme="forest"
+      data-theme={currentTheme}
     >
       <div className="w-full max-w-5xl mx-auto bg-base-100 border border-primary/25 flex flex-col lg:flex-row rounded-xl shadow-lg overflow-hidden">
         <section

@@ -10,6 +10,10 @@ const Navbar = () => {
   const isChatPage = location.pathname?.startsWith("/chat");
   const { logoutMutation } = useLogout();
 
+  const handleLogout = () => {
+    logoutMutation();
+  };
+
   return (
     <nav className="bg-base-200 border-b border-base-300 sticky top-0 z-30 h-16 flex items-center justify-between">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,7 +49,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          <button className="btn btn-ghost btn-circle" onClick={logoutMutation}>
+          <button className="btn btn-ghost btn-circle" onClick={handleLogout}>
             <LogOutIcon className="size-6 text-base-content opacity-70" />
           </button>
         </div>

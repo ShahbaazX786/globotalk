@@ -5,9 +5,11 @@ import { Link } from "react-router";
 import z from "zod";
 import { useLogin } from "../../lib/hooks/useMutations";
 import loginFormSchema from "../../lib/schema/login.schema";
+import { useThemeStore } from "../../lib/store/theme.store";
 import { cn } from "../../utils/classMerge";
 
 const LoginPage = () => {
+  const { currentTheme } = useThemeStore();
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
   });
@@ -22,7 +24,7 @@ const LoginPage = () => {
   return (
     <section
       className="w-full h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
-      data-theme="forest"
+      data-theme={currentTheme}
     >
       <div className="w-full max-w-5xl mx-auto bg-base-100 border border-primary/25 flex flex-col lg:flex-row rounded-xl shadow-lg overflow-hidden">
         <section
