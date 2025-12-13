@@ -12,7 +12,9 @@ import protectRoute from "../middleware/auth.middleware.js";
 const userRouter = express.Router();
 
 userRouter.use(protectRoute);
-userRouter.post("/", getRecommendations).post("/friends", getFriendList);
+userRouter
+  .get("/recommendations", getRecommendations)
+  .get("/friends", getFriendList);
 
 userRouter
   .route("/friend-req/:id")
