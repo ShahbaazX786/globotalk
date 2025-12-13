@@ -9,16 +9,17 @@ import CallPage from "./pages/Communication/CallPage";
 import ChatPage from "./pages/Communication/ChatPage";
 import NotificationsPage from "./pages/Communication/NotificationsPage";
 import HomePage from "./pages/HomePage";
+import Layout from "./components/Layout/Layout";
 
 function App() {
   const { isLoading, authUser } = useAuthUser();
   const isAuthenticated = Boolean(authUser);
-  const isOnboarded = authUser?.onBoarded;
+  const isOnboarded = authUser?.isOnboarded;
 
   if (isLoading) return <PageLoader />;
 
   return (
-    <div data-theme="cupcake" className="w-full h-screen">
+    <div data-theme="forest" className="w-full h-screen">
       {/* <h1 className="text-3xl font-bold underline text-green-500">
         Bismillah!
       </h1> */}
@@ -27,7 +28,9 @@ function App() {
           path="/"
           element={
             isAuthenticated && isOnboarded ? (
-              <HomePage />
+              <Layout showSidebar>
+                <HomePage />
+              </Layout>
             ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
