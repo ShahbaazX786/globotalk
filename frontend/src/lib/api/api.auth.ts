@@ -1,4 +1,5 @@
 import type z from "zod";
+import type loginFormSchema from "../schema/login.schema";
 import type onboardingFormSchema from "../schema/onboarding.schema";
 import type signupFormSchema from "../schema/signup.schema";
 import API from "./api.config";
@@ -13,6 +14,11 @@ const signupUser = async (payload: z.infer<typeof signupFormSchema>) => {
   return response.data;
 };
 
+const loginUser = async (payload: z.infer<typeof loginFormSchema>) => {
+  const response = await API.post("/auth/login", payload);
+  return response.data;
+};
+
 const completeOnboarding = async (
   payload: z.infer<typeof onboardingFormSchema>
 ) => {
@@ -20,4 +26,4 @@ const completeOnboarding = async (
   return response.data;
 };
 
-export { completeOnboarding, getAuthUser, signupUser };
+export { completeOnboarding, getAuthUser, loginUser, signupUser };
