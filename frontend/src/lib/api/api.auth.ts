@@ -5,8 +5,13 @@ import type signupFormSchema from "../schema/signup.schema";
 import API from "./api.config";
 
 const getAuthUser = async () => {
-  const res = await API.get("/auth/me");
-  return res.data;
+  try {
+    const res = await API.get("/auth/me");
+    return res.data;
+  } catch (error) {
+    console.error("Error in getAuthUser:", error);
+    return null;
+  }
 };
 
 const signupUser = async (payload: z.infer<typeof signupFormSchema>) => {
@@ -19,11 +24,16 @@ const loginUser = async (payload: z.infer<typeof loginFormSchema>) => {
   return response.data;
 };
 
-const completeOnboarding = async (
-  payload: z.infer<typeof onboardingFormSchema>
-) => {
-  const response = await API.post("/auth/onboarding", payload);
+const logoutUser = async () => {
+  const response = await API.post("/auth/logout");
   return response.data;
 };
 
-export { completeOnboarding, getAuthUser, loginUser, signupUser };
+const completeOnboarding = async (
+  payload: z.infer<typeof onboardingFormSchema>
+) => {
+  const response = await API.post("/auth/onboard", payload);
+  return response.data;
+};
+
+export { completeOnboarding, getAuthUser, loginUser, logoutUser, signupUser };

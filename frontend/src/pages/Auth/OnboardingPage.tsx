@@ -1,10 +1,4 @@
-import type z from "zod";
-import { useMutation } from "@tanstack/react-query";
-import { completeOnboarding } from "../../lib/api/api.auth";
-import toast from "react-hot-toast";
-import { useForm } from "react-hook-form";
-import onboardingFormSchema from "../../lib/schema/onboarding.schema";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CameraIcon,
   LoaderIcon,
@@ -12,33 +6,35 @@ import {
   ShipWheelIcon,
   ShuffleIcon,
 } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import type z from "zod";
+import useAuthUser from "../../lib/hooks/useAuthUser";
+import { useOnboarding } from "../../lib/hooks/useMutations";
+import onboardingFormSchema from "../../lib/schema/onboarding.schema";
 import { LANGUAGES } from "../../utils/constants";
 
 const OnboardingPage = () => {
+  const { authUser } = useAuthUser();
+  console.log(authUser);
   const [formState, setFormState] = useState({
-    fullName: "",
-    profilePic: "",
-    bio: "",
-    nativeLanguage: "",
-    learningLanguage: "",
-    location: "",
+    fullName: authUser?.fullName,
+    profilePic: authUser?.profilePic,
+    bio: authUser?.bio,
+    nativeLanguage: authUser?.nativeLanguage,
+    learningLanguage: authUser?.learningLanguage,
+    location: authUser?.location,
   });
 
-  const { mutate: onboardingMutation, isPending } = useMutation({
-    mutationFn: (data: z.infer<typeof onboardingFormSchema>) =>
-      completeOnboarding(data),
-    onMutate: () => {
-      toast.loading("Saving your profile details");
-    },
-  });
+  const { isPending, onboardMutation } = useOnboarding();
 
   const onboardingForm = useForm<z.infer<typeof onboardingFormSchema>>({
     resolver: zodResolver(onboardingFormSchema),
   });
 
   const onFormSubmit = (data: z.infer<typeof onboardingFormSchema>) => {
-    onboardingMutation(data);
+    onboardMutation(data);
   };
 
   const generateRandomAvatar = () => {
