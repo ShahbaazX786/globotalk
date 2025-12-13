@@ -1,47 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ShipWheelIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import { Link } from "react-router";
 import z from "zod";
-import { signupUser } from "../../lib/api/api.auth";
-import { cn } from "../../utils/classMerge";
+import { useSignup } from "../../lib/hooks/useMutations";
 import signupFormSchema from "../../lib/schema/signup.schema";
+import { cn } from "../../utils/classMerge";
 
 const SignUpPage = () => {
   const signupForm = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
   });
   const formErrors = signupForm.formState.errors;
-  const queryClient = useQueryClient();
 
-  const {
-    mutate: signUpMutation,
-    isPending,
-    error,
-  } = useMutation({
-    mutationFn: (data: z.infer<typeof signupFormSchema>) => signupUser(data),
-    onMutate: () => {
-      toast.loading("Creating Your Account");
-    },
-    onSuccess: (res) => {
-      if (res?.success) {
-        toast.dismiss();
-        toast.success("Account Created Sucessfully!");
-      }
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-    },
-    onError: (err: any) => {
-      toast.dismiss();
-      toast.error(err?.response?.data?.message);
-      console.error("Error while creating an account:", err);
-    },
-  });
+  const { signUpMutation, isPending, error } = useSignup();
 
   const onFormSubmit = (data: z.infer<typeof signupFormSchema>) => {
     signUpMutation(data);
-    console.log(data);
   };
 
   return (
