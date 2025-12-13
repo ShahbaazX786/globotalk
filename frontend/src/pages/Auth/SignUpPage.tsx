@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 import { Link } from "react-router";
 import z from "zod";
 import { signupUser } from "../../lib/api/api.auth";
-import { signupFormSchema } from "../../lib/schema/signup.schema";
 import { cn } from "../../utils/classMerge";
+import signupFormSchema from "../../lib/schema/signup.schema";
 
 const SignUpPage = () => {
   const signupForm = useForm<z.infer<typeof signupFormSchema>>({

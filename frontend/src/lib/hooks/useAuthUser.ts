@@ -9,9 +9,9 @@ const useAuthUser = () => {
   });
 
   return {
-    isLoading: authUser.isLoading,
-    authUser: authUser.data.user,
-    error: authUser.error,
+    isLoading: authUser?.isLoading,
+    authUser: authUser?.data?.user,
+    error: authUser?.error,
   };
 };
 

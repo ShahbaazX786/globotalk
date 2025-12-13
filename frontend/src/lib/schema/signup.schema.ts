@@ -16,4 +16,4 @@ const signupFormSchema = z.object({
     .max(50, { error: "Whoa!! are you storing nuclear codes or what?" }),
 });
 
-export { signupFormSchema };
+export default signupFormSchema;
