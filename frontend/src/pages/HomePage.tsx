@@ -19,7 +19,10 @@ import { cn } from "../utils/classMerge";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
-  const [outgoingRequestsIds, setOutGoingRequestIds] = useState([]);
+
+  const [outgoingRequestsIds, setOutGoingRequestIds] = useState<Set<string>>(
+    new Set()
+  );
 
   const { data: friendList = [], isLoading: isFriendListLoading } = useQuery({
     queryKey: ["friends"],
@@ -111,7 +114,7 @@ const HomePage = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {RecommendedList.map((user: any) => {
-                const hasRequestBeenSent = outgoingRequestsIds.has(user._id);
+                const hasRequestBeenSent = outgoingRequestsIds?.has(user._id);
                 return (
                   <div
                     key={user._id}
