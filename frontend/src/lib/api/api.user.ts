@@ -10,13 +10,13 @@ const getFriendList = async () => {
   return response.data;
 };
 
-const getOutgoingFriendRequests = async () => {
-  const response = await API.get("/user/outgoing-friend-requests");
+const getSentFriendRequests = async () => {
+  const response = await API.get("/user/sent-friend-requests");
   return response.data;
 };
 
 const sendFriendRequest = async (userId: string) => {
-  const response = await API.get(`/user/friend-req/${userId}`);
+  const response = await API.get(`/user/friend-request/${userId}`);
   return response.data;
 };
 
@@ -26,7 +26,7 @@ const getFriendRequests = async () => {
 };
 
 const acceptFriendRequest = async (requestId: string) => {
-  const response = await API.get(`/user/friend-request/${requestId}/accept`);
+  const response = await API.put(`/user/friend-request/${requestId}`);
   return response.data;
 };
 
@@ -34,7 +34,7 @@ export {
   acceptFriendRequest,
   getFriendList,
   getFriendRequests,
-  getOutgoingFriendRequests,
+  getSentFriendRequests,
   getRecommendedUsers,
   sendFriendRequest,
 };
