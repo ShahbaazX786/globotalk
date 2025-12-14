@@ -11,10 +11,10 @@ import protectRoute from "../middleware/auth.middleware.js";
 const authRouter = express.Router();
 
 authRouter
+  .get("/me", protectRoute, isAuth)
   .post("/signup", SignUp)
   .post("/login", LogIn)
   .post("/logout", LogOut)
   .post("/onboard", protectRoute, onBoard);
 
-authRouter.get("/me", protectRoute, isAuth);
 export default authRouter;
