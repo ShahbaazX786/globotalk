@@ -86,7 +86,7 @@ const acceptFriendRequest = async (req: any, res: Response) => {
 
     if (!friendRequest)
       return res.status(404).json({ message: "Friend request not found" });
-    if (!friendRequest.recipient.toString() !== req.user.id)
+    if (friendRequest.recipient.toString() !== req.user.id.toString())
       return res
         .status(403)
         .json({ message: "You are not authorized to accept this request" });
@@ -127,9 +127,9 @@ const getFriendRequests = async (req: any, res: Response) => {
   }
 };
 
-const getOutgoingFriendRequests = async (req: any, res: Response) => {
+const getSentFriendRequests = async (req: any, res: Response) => {
   try {
-    const outgoingReqs = await FriendRequest.find({
+    const sentFriendReqs = await FriendRequest.find({
       sender: req.user.id,
       status: "pending",
     }).populate(
@@ -137,7 +137,7 @@ const getOutgoingFriendRequests = async (req: any, res: Response) => {
       "fullName profilePic nativeLanguage learningLanguage"
     );
 
-    res.status(200).json({ outgoingReqs });
+    res.status(200).json({ sentFriendReqs });
   } catch (error: any) {
     console.error(
       "Error in getOutgoingFriendRequests controller",
@@ -151,7 +151,7 @@ export {
   acceptFriendRequest,
   getFriendList,
   getFriendRequests,
-  getOutgoingFriendRequests,
+  getSentFriendRequests,
   getRecommendations,
   sendFriendRequest,
 };
