@@ -10,8 +10,8 @@ import { Link } from "react-router";
 import FriendCard, { getLanguageFlag } from "../components/FriendCard";
 import {
   getFriendList,
-  getOutgoingFriendRequests,
   getRecommendedUsers,
+  getSentFriendRequests,
   sendFriendRequest,
 } from "../lib/api/api.user";
 import NoFriendsFound from "../components/Misc/NoFriendsFound";
@@ -36,8 +36,8 @@ const HomePage = () => {
     });
 
   const { data: outgoingFriendReqs } = useQuery({
-    queryKey: ["outgoingFriendReqs"],
-    queryFn: getOutgoingFriendRequests,
+    queryKey: ["sentFriendReqs"],
+    queryFn: getSentFriendRequests,
   });
 
   const { mutate: sendRequestMutation, isPending } = useMutation({
