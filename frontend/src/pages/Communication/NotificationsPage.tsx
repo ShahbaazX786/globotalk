@@ -6,7 +6,7 @@ import {
   UserCheckIcon,
 } from "lucide-react";
 import NoNotificationsFound from "../../components/Misc/NoNotificationsFound";
-import { getFriendRequests } from "../../lib/api/api.user";
+import { acceptFriendRequest, getFriendRequests } from "../../lib/api/api.user";
 
 const NotificationsPage = () => {
   const queryClient = useQueryClient();
@@ -16,15 +16,15 @@ const NotificationsPage = () => {
     queryFn: getFriendRequests,
   });
 
-  const { mutate: friendRequestsMutation, isPending } = useMutation({
-    mutationFn: getFriendRequests,
+  const { mutate: acceptFriendRequestM, isPending } = useMutation({
+    mutationFn: acceptFriendRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
       queryClient.invalidateQueries({ queryKey: ["friends"] });
     },
   });
 
-  const incomingReqs = friendRequests?.incomingReqs || [];
+  const pendingReqs = friendRequests?.pendingReqs || [];
   const acceptedReqs = friendRequests?.acceptedReqs || [];
 
   return (
@@ -40,18 +40,18 @@ const NotificationsPage = () => {
           </div>
         ) : (
           <>
-            {incomingReqs?.length > 0 && (
+            {pendingReqs?.length > 0 && (
               <section className="space-y-4">
                 <h2 className="text-xl font-semibold flex items-center gap-2">
                   <UserCheckIcon className="size-5 text-primary" />
                   Friend Requests
                   <span className="badge badge-primary ml-2">
-                    {incomingReqs?.length}
+                    {pendingReqs?.length}
                   </span>
                 </h2>
 
                 <div className="space-y-3">
-                  {incomingReqs.map((request: any) => (
+                  {pendingReqs.map((request: any) => (
                     <div
                       key={request._id}
                       className="card bg-base-200 shadow-sm hover:shadow-md transition-shadow"
@@ -81,7 +81,7 @@ const NotificationsPage = () => {
                       </div>
                       <button
                         className="btn btn-primary btn-sm"
-                        onClick={() => friendRequestsMutation(request._id)}
+                        onClick={() => acceptFriendRequestM(request._id)}
                         disabled={isPending}
                       >
                         Accept
@@ -138,7 +138,7 @@ const NotificationsPage = () => {
               </section>
             )}
 
-            {incomingReqs?.length === 0 && acceptedReqs?.length === 0 && (
+            {pendingReqs?.length === 0 && acceptedReqs?.length === 0 && (
               <NoNotificationsFound />
             )}
           </>
