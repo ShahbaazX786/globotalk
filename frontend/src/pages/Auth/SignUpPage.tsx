@@ -1,53 +1,30 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ShipWheelIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import { Link } from "react-router";
 import z from "zod";
-import { signupUser } from "../../lib/api/api.auth";
-import { signupFormSchema } from "../../lib/schema/signup.schema";
+import { useSignup } from "../../lib/hooks/useMutations";
+import signupFormSchema from "../../lib/schema/signup.schema";
+import { useThemeStore } from "../../lib/store/theme.store";
 import { cn } from "../../utils/classMerge";
 
 const SignUpPage = () => {
+  const { currentTheme } = useThemeStore();
   const signupForm = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
   });
   const formErrors = signupForm.formState.errors;
-  const queryClient = useQueryClient();
 
-  const {
-    mutate: signUpMutation,
-    isPending,
-    error,
-  } = useMutation({
-    mutationFn: (data: z.infer<typeof signupFormSchema>) => signupUser(data),
-    onMutate: () => {
-      toast.loading("Creating Your Account");
-    },
-    onSuccess: (res) => {
-      if (res?.success) {
-        toast.dismiss();
-        toast.success("Account Created Sucessfully!");
-      }
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-    },
-    onError: (err: any) => {
-      toast.dismiss();
-      toast.error(err?.response?.data?.message);
-      console.error("Error while creating an account:", err);
-    },
-  });
+  const { signUpMutation, isPending, error } = useSignup();
 
   const onFormSubmit = (data: z.infer<typeof signupFormSchema>) => {
     signUpMutation(data);
-    console.log(data);
   };
 
   return (
     <section
       className="w-full h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
-      data-theme="forest"
+      data-theme={currentTheme}
     >
       <div className="w-full max-w-5xl mx-auto bg-base-100 border border-primary/25 flex flex-col lg:flex-row rounded-xl shadow-lg overflow-hidden">
         <section
@@ -170,7 +147,11 @@ const SignUpPage = () => {
                   </label>
                 </div>
               </div>
-              <button className="btn btn-primary w-full" type="submit">
+              <button
+                className="btn btn-primary w-full"
+                type="submit"
+                disabled={isPending}
+              >
                 {isPending ? "Signing Up..." : "Create Account"}
               </button>
 
