@@ -10,10 +10,10 @@ import {
   MessageList,
   Window,
 } from "stream-chat-react";
-import ChatLoader from "../../components/ChatLoader";
+import ChatLoader from "../../components/Chat/ChatLoader";
 import { getStreamToken } from "../../lib/api/api.chat";
 import useAuthUser from "../../lib/hooks/useAuthUser";
-import CallButton from "../../components/CallButton";
+import CallButton from "../../components/Chat/CallButton";
 import toast from "react-hot-toast";
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 

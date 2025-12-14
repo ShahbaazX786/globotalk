@@ -5,7 +5,7 @@ import {
   MessageSquareIcon,
   UserCheckIcon,
 } from "lucide-react";
-import NoNotificationsFound from "../../components/NoNotificationsFound";
+import NoNotificationsFound from "../../components/Misc/NoNotificationsFound";
 import { getFriendRequests } from "../../lib/api/api.user";
 
 const NotificationsPage = () => {

@@ -14,7 +14,7 @@ import {
   getRecommendedUsers,
   sendFriendRequest,
 } from "../lib/api/api.user";
-import NoFriendsFound from "../components/NoFriendsFound";
+import NoFriendsFound from "../components/Misc/NoFriendsFound";
 import { cn } from "../utils/classMerge";
 
 const HomePage = () => {
