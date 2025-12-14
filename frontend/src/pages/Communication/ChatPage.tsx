@@ -13,6 +13,8 @@ import {
 import ChatLoader from "../../components/ChatLoader";
 import { getStreamToken } from "../../lib/api/api.chat";
 import useAuthUser from "../../lib/hooks/useAuthUser";
+import CallButton from "../../components/CallButton";
+import toast from "react-hot-toast";
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
 const ChatPage = () => {
@@ -28,6 +30,16 @@ const ChatPage = () => {
     queryFn: getStreamToken,
     enabled: !!authUser,
   });
+
+  const handleVideoCall = () => {
+    if (channel) {
+      const callUrl = `${window.location.origin}/call/${channel.id}`;
+      channel.sendMessage({
+        text: `Hey, I've started a video call. Join me here: ${callUrl}`,
+      });
+      toast.success("Video call link sent sucessfully");
+    }
+  };
 
   useEffect(() => {
     const initChat = async () => {
@@ -69,6 +81,7 @@ const ChatPage = () => {
       <Chat client={chatClient}>
         <Channel channel={channel}>
           <div className="w-full relative">
+            <CallButton handleVideoCall={handleVideoCall} />
             <Window>
               <ChannelHeader />
               <MessageList />
