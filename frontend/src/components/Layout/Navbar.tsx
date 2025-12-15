@@ -1,4 +1,4 @@
-import { BellIcon, LogOutIcon, ShipWheelIcon } from "lucide-react";
+import { BellIcon, LogOutIcon, PhoneCall } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import useAuthUser from "../../lib/hooks/useAuthUser";
 import { useLogout } from "../../lib/hooks/useMutations";
@@ -21,7 +21,7 @@ const Navbar = () => {
           {isChatPage && (
             <div className="pl-5">
               <Link to={"/"} className="flex items-center gap-2.5">
-                <ShipWheelIcon className="size-8 text-primary" />
+                <PhoneCall className="size-8 text-primary" />
                 <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-widerk">
                   GloboTalk
                 </span>

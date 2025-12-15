@@ -3,7 +3,7 @@ import {
   CameraIcon,
   LoaderIcon,
   MapPinIcon,
-  ShipWheelIcon,
+  PhoneCall,
   ShuffleIcon,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -175,7 +175,7 @@ const OnboardingPage = () => {
             >
               {!isPending ? (
                 <>
-                  <ShipWheelIcon className="size-5 mr-2" />
+                  <PhoneCall className="size-5 mr-2" />
                   Complete Onboarding
                 </>
               ) : (
