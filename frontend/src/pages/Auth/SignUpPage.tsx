@@ -39,7 +39,7 @@ const SignUpPage = () => {
           </div>
 
           {error && (
-            <div className="alert alert-error mb-4">
+            <div className="alert alert-error mb-4 font-bold">
               <span>{error?.response?.data?.message}</span>
             </div>
           )}
