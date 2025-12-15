@@ -196,4 +196,7 @@ const LANGUAGE_TO_FLAG = {
   dutch: "nl",
 };
 
-export { LANGUAGE_TO_FLAG, LANGUAGES, THEMES };
+const PageTitle =
+  "GloboTalk - Connect, Converse, Learn, Share, Chat in your favorite language";
+
+export { LANGUAGE_TO_FLAG, LANGUAGES, THEMES, PageTitle };

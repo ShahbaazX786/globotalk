@@ -11,8 +11,10 @@ import ChatPage from "./pages/Communication/ChatPage";
 import NotificationsPage from "./pages/Communication/NotificationsPage";
 import HomePage from "./pages/HomePage";
 import PageLoader from "./components/Misc/PageLoader";
+import usePageTitle from "./lib/hooks/usePageTitle";
 
 function App() {
+  usePageTitle();
   const { currentTheme } = useThemeStore();
   const { isLoading, authUser } = useAuthUser();
   const isAuthenticated = Boolean(authUser);
