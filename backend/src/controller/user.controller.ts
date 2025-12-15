@@ -99,6 +99,11 @@ const acceptFriendRequest = async (req: any, res: Response) => {
     await User.findByIdAndUpdate(friendRequest.recipient, {
       $addToSet: { friendList: friendRequest.sender },
     });
+
+    return res.status(200).json({
+      success: true,
+      message: "Friend request accepted",
+    });
   } catch (error: any) {
     console.error("Error in acceptFriendRequest controller", error.message);
     res.status(500).json({ message: "Server Error" });
@@ -116,9 +121,11 @@ const getFriendRequests = async (req: any, res: Response) => {
     );
 
     const acceptedReqs = await FriendRequest.find({
-      recipient: req.user.id,
+      $or: [{ sender: req.user.id }, { recipient: req.user.id }],
       status: "accepted",
-    }).populate("recipient", "fullName profilePic");
+    })
+      .populate("sender", "fullName profilePic")
+      .populate("recipient", "fullName profilePic");
 
     res.status(200).json({ pendingReqs, acceptedReqs });
   } catch (error: any) {
