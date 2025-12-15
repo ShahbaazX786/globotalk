@@ -1,55 +1,36 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircleIcon, MapPin, UserPlusIcon, UsersIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import FriendCard, { getLanguageFlag } from "../components/FriendCard";
-import {
-  getFriendList,
-  getRecommendedUsers,
-  getSentFriendRequests,
-  sendFriendRequest,
-} from "../lib/api/api.user";
 import NoFriendsFound from "../components/Misc/NoFriendsFound";
+import { useSendFriendReq } from "../lib/hooks/queries/mutations/useFriendMutation";
+import {
+  useFriendListQuery,
+  useGetRecommendedUserQuery,
+  useSentFriendReqQuery,
+} from "../lib/hooks/queries/queries/useFriendQuery";
 import { cn } from "../utils/classMerge";
 
 const HomePage = () => {
-  const queryClient = useQueryClient();
+  const { friendList, isLoading: isFriendListLoading } = useFriendListQuery();
+  const { sentReqs } = useSentFriendReqQuery();
+  const { recommendedList, isLoading: isRecommendedListLoading } =
+    useGetRecommendedUserQuery();
+  const { isPending, sendFriendReq } = useSendFriendReq();
 
   const [outgoingRequestsIds, setOutGoingRequestIds] = useState<Set<string>>(
     new Set()
   );
 
-  const { data: friendList = [], isLoading: isFriendListLoading } = useQuery({
-    queryKey: ["friends"],
-    queryFn: getFriendList,
-  });
-
-  const { data: RecommendedList, isLoading: isRecommendedListLoading } =
-    useQuery({
-      queryKey: ["users"],
-      queryFn: getRecommendedUsers,
-    });
-
-  const { data: outgoingFriendReqs } = useQuery({
-    queryKey: ["sentFriendReqs"],
-    queryFn: getSentFriendRequests,
-  });
-
-  const { mutate: sendRequestMutation, isPending } = useMutation({
-    mutationFn: sendFriendRequest,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
-  });
-
   useEffect(() => {
     const outgoingIds = new Set();
-    if (outgoingFriendReqs && outgoingFriendReqs.length > 0) {
-      outgoingFriendReqs.forEach((req: any) => {
+    if (sentReqs && sentReqs.length > 0) {
+      sentReqs.forEach((req: any) => {
         outgoingIds.add(req?.recipient._id);
       });
-      setOutGoingRequestIds(outgoingIds);
+      setOutGoingRequestIds(outgoingIds as any);
     }
-  }, [outgoingFriendReqs]);
+  }, [sentReqs]);
 
   return (
     <section id="HomePage" className="p-4 sm:p-6 lg:p-8">
@@ -97,7 +78,7 @@ const HomePage = () => {
             <div className="flex justify-center py-12">
               <span className="loading loading-spinner loading-lg" />
             </div>
-          ) : RecommendedList.length === 0 ? (
+          ) : recommendedList.length === 0 ? (
             <div className="card bg-base-200 p-6 text-center">
               <h3 className="font-semibold text-lg mb-2">
                 No recommendations available
@@ -108,7 +89,7 @@ const HomePage = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {RecommendedList.map((user: any) => {
+              {recommendedList.map((user: any) => {
                 const hasRequestBeenSent = outgoingRequestsIds?.has(user._id);
                 return (
                   <div
@@ -154,7 +135,7 @@ const HomePage = () => {
                           "btn w-full mt-2",
                           hasRequestBeenSent ? "btn-disabled" : "btn-primary"
                         )}
-                        onClick={() => sendRequestMutation(user._id)}
+                        onClick={() => sendFriendReq(user._id)}
                         disabled={hasRequestBeenSent || isPending}
                       >
                         {hasRequestBeenSent ? (

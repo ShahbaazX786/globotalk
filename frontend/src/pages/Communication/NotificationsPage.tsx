@@ -1,29 +1,17 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BellIcon, ClockIcon, UserCheckIcon, UserPlus2 } from "lucide-react";
 import NoNotificationsFound from "../../components/Misc/NoNotificationsFound";
-import { acceptFriendRequest, getFriendRequests } from "../../lib/api/api.user";
-import useAuthUser from "../../lib/hooks/useAuthUser";
+import { useAcceptFriendReq } from "../../lib/hooks/queries/mutations/useFriendMutation";
+import useAuthUser from "../../lib/hooks/queries/queries/useAuthQuery";
+import useFriendQuery from "../../lib/hooks/queries/queries/useFriendQuery";
 import { formatTo12HourDateTime } from "../../utils/helpers";
 
 const NotificationsPage = () => {
   const { authUser } = useAuthUser();
-  const queryClient = useQueryClient();
+  const { friendReqs, isLoading } = useFriendQuery();
+  const pendingReqs = friendReqs?.pendingReqs || [];
+  const acceptedReqs = friendReqs?.acceptedReqs || [];
 
-  const { data: friendRequests, isLoading } = useQuery({
-    queryKey: ["friendRequests"],
-    queryFn: getFriendRequests,
-  });
-
-  const { mutate: acceptFriendRequestM, isPending } = useMutation({
-    mutationFn: acceptFriendRequest,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
-    },
-  });
-
-  const pendingReqs = friendRequests?.pendingReqs || [];
-  const acceptedReqs = friendRequests?.acceptedReqs || [];
+  const { acceptFriendReq, isPending } = useAcceptFriendReq();
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -79,7 +67,7 @@ const NotificationsPage = () => {
                       </div>
                       <button
                         className="btn btn-primary btn-sm"
-                        onClick={() => acceptFriendRequestM(request._id)}
+                        onClick={() => acceptFriendReq(request._id)}
                         disabled={isPending}
                       >
                         Accept
