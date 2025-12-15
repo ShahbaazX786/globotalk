@@ -1,6 +1,6 @@
-import { Link, useLocation } from "react-router";
-import useAuthUser from "../../lib/hooks/useAuthUser";
 import { BellIcon, HomeIcon, PhoneCall, UsersIcon } from "lucide-react";
+import { Link, useLocation } from "react-router";
+import useAuthUser from "../../lib/hooks/queries/queries/useAuthQuery";
 import { cn } from "../../utils/classMerge";
 
 const Sidebar = () => {

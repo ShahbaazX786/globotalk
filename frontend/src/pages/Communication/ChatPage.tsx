@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useParams } from "react-router";
 import { StreamChat } from "stream-chat";
 import {
@@ -10,11 +11,10 @@ import {
   MessageList,
   Window,
 } from "stream-chat-react";
+import CallButton from "../../components/Chat/CallButton";
 import ChatLoader from "../../components/Chat/ChatLoader";
 import { getStreamToken } from "../../lib/api/api.chat";
-import useAuthUser from "../../lib/hooks/useAuthUser";
-import CallButton from "../../components/Chat/CallButton";
-import toast from "react-hot-toast";
+import useAuthUser from "../../lib/hooks/queries/queries/useAuthQuery";
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
 const ChatPage = () => {
