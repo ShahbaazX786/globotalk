@@ -12,6 +12,7 @@ import CallPage from "./pages/Communication/CallPage";
 import ChatPage from "./pages/Communication/ChatPage";
 import NotificationsPage from "./pages/Communication/NotificationsPage";
 import HomePage from "./pages/HomePage";
+import FriendsPage from "./pages/Communication/FriendsPage";
 
 function App() {
   usePageTitle();
@@ -90,6 +91,18 @@ function App() {
             isAuthenticated && isOnboarded ? (
               <Layout showSidebar={false}>
                 <ChatPage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
+          }
+        />
+        <Route
+          path="/friends"
+          element={
+            isAuthenticated && isOnboarded ? (
+              <Layout showSidebar>
+                <FriendsPage />
               </Layout>
             ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
