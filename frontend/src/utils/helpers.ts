@@ -13,4 +13,12 @@ const capitalize = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
-export { getTitle };
+const getRandomAvatar = () => {
+  const AvatarAPIUrl = import.meta.env.VITE_AVATAR_API_URL!;
+
+  const seed = Math.random().toString(36).substring(2);
+  const randomAvatar = `${AvatarAPIUrl}?seed=${seed}`;
+  return randomAvatar;
+};
+
+export { getRandomAvatar, getTitle };

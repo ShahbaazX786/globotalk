@@ -14,6 +14,7 @@ import { useOnboarding } from "../../lib/hooks/useMutations";
 import onboardingFormSchema from "../../lib/schema/onboarding.schema";
 import { useThemeStore } from "../../lib/store/theme.store";
 import { LANGUAGES } from "../../utils/constants";
+import { getRandomAvatar } from "../../utils/helpers";
 
 const OnboardingPage = () => {
   const { currentTheme } = useThemeStore();
@@ -32,17 +33,18 @@ const OnboardingPage = () => {
       location: authUser?.location ?? "",
     },
   });
+  const profilePic = onboardingForm.watch("profilePic");
 
   const onFormSubmit = (data: z.infer<typeof onboardingFormSchema>) => {
     onboardMutation(data);
   };
 
   const generateRandomAvatar = () => {
-    const idx = Math.floor(Math.random() * 100) + 1;
-    const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
+    const randomAvatar = getRandomAvatar();
     onboardingForm.setValue("profilePic", randomAvatar, {
       shouldValidate: true,
     });
+    toast.dismiss();
     toast.success("Random Profile Picture Generated");
   };
 
@@ -64,9 +66,9 @@ const OnboardingPage = () => {
           >
             <div className="flex flex-col justify-center items-center space-y-4">
               <div className="size-32 rounded-full bg-base-300 overflow-hidden">
-                {onboardingForm.getValues("profilePic") ? (
+                {profilePic ? (
                   <img
-                    src={onboardingForm.getValues("profilePic")}
+                    src={profilePic}
                     alt="Profile Picture"
                     className="w-full h-full object-cover"
                   />
