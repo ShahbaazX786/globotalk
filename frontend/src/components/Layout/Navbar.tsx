@@ -1,12 +1,15 @@
 import { BellIcon, LogOutIcon, PhoneCall } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import useAuthUser from "../../lib/hooks/useAuthUser";
 import { useLogout } from "../../lib/hooks/useMutations";
+import { cn } from "../../utils/classMerge";
 import ThemeSelector from "../Misc/ThemeSelector";
 
 const Navbar = () => {
   const { authUser } = useAuthUser();
   const { logoutMutation } = useLogout();
+  const location = useLocation();
+  const isChatPage = location.pathname?.startsWith("/chat");
 
   const handleLogout = () => {
     logoutMutation();
@@ -16,7 +19,7 @@ const Navbar = () => {
     <nav className="bg-base-200 border-b border-base-300 sticky top-0 z-30 h-16 flex items-center justify-between">
       <div className="container mx-auto lg:px-4">
         <div className="flex justify-end items-center w-full gap-2">
-          <div className="lg:hidden">
+          <div className={cn(isChatPage ? "flex" : "lg:hidden")}>
             <Link to={"/"} className="flex items-center gap-2.5">
               <PhoneCall className="size-8 text-primary" />
               <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-widerk">
