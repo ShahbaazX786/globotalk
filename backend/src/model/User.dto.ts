@@ -8,7 +8,7 @@ interface IUser {
   profilePic?: string;
   location?: string;
   nativeLanguage?: string;
-  learningLanguages?: string[];
+  learningLanguage?: string;
   isOnboarded?: boolean;
   friendList?: mongoose.Types.ObjectId[];
 }
