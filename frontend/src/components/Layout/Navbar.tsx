@@ -1,7 +1,7 @@
 import { BellIcon, LogOutIcon, PhoneCall } from "lucide-react";
 import { Link, useLocation } from "react-router";
-import useAuthUser from "../../lib/hooks/useAuthUser";
-import { useLogout } from "../../lib/hooks/useMutations";
+import { useLogout } from "../../lib/hooks/queries/mutations/useAuthMutation";
+import useAuthUser from "../../lib/hooks/queries/queries/useAuthQuery";
 import { cn } from "../../utils/classMerge";
 import ThemeSelector from "../Misc/ThemeSelector";
 

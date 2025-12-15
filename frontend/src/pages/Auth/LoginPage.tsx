@@ -3,7 +3,7 @@ import { PhoneCall } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import z from "zod";
-import { useLogin } from "../../lib/hooks/useMutations";
+import { useLogin } from "../../lib/hooks/queries/mutations/useAuthMutation";
 import loginFormSchema from "../../lib/schema/login.schema";
 import { useThemeStore } from "../../lib/store/theme.store";
 import { cn } from "../../utils/classMerge";

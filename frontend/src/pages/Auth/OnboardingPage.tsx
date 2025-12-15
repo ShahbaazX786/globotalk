@@ -9,8 +9,8 @@ import {
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import type z from "zod";
-import useAuthUser from "../../lib/hooks/useAuthUser";
-import { useOnboarding } from "../../lib/hooks/useMutations";
+import { useOnboarding } from "../../lib/hooks/queries/mutations/useAuthMutation";
+import useAuthUser from "../../lib/hooks/queries/queries/useAuthQuery";
 import onboardingFormSchema from "../../lib/schema/onboarding.schema";
 import { useThemeStore } from "../../lib/store/theme.store";
 import { LANGUAGES } from "../../utils/constants";
