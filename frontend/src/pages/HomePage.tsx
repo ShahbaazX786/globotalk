@@ -1,10 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  CheckCircleIcon,
-  MapIcon,
-  UserPlusIcon,
-  UsersIcon,
-} from "lucide-react";
+import { CheckCircleIcon, MapPin, UserPlusIcon, UsersIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import FriendCard, { getLanguageFlag } from "../components/FriendCard";
@@ -132,7 +127,7 @@ const HomePage = () => {
                           </h3>
                           {user?.location && (
                             <div className="flex text-center text-xs opacity-70 mt-1">
-                              <MapIcon className="size-3 mr-1" />
+                              <MapPin className="size-3 mr-1" />
                               {user?.location}
                             </div>
                           )}
@@ -146,7 +141,7 @@ const HomePage = () => {
                         </span>
                         <span className="badge badge-outline text-xs">
                           {getLanguageFlag(user?.learningLanguage)}
-                          Native:{user?.learningLanguage}
+                          Learning:{user?.learningLanguage}
                         </span>
                       </div>
 

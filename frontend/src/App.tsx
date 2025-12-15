@@ -21,7 +21,7 @@ function App() {
   if (isLoading) return <PageLoader />;
 
   return (
-    <div data-theme={currentTheme} className="w-full h-screen">
+    <div data-theme={currentTheme}>
       {/* <h1 className="text-3xl font-bold underline text-green-500">
         Bismillah!
       </h1> */}
