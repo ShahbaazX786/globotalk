@@ -1,35 +1,21 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  BellIcon,
-  ClockIcon,
-  MessageSquareIcon,
-  UserCheckIcon,
-} from "lucide-react";
-import NoNotificationsFound from "../../components/NoNotificationsFound";
-import { getFriendRequests } from "../../lib/api/api.user";
+import { BellIcon, ClockIcon, UserCheckIcon, UserPlus2 } from "lucide-react";
+import NoNotificationsFound from "../../components/Misc/NoNotificationsFound";
+import { useAcceptFriendReq } from "../../lib/hooks/queries/mutations/useFriendMutation";
+import useAuthUser from "../../lib/hooks/queries/queries/useAuthQuery";
+import useFriendQuery from "../../lib/hooks/queries/queries/useFriendQuery";
+import { formatTo12HourDateTime } from "../../utils/helpers";
 
 const NotificationsPage = () => {
-  const queryClient = useQueryClient();
+  const { authUser } = useAuthUser();
+  const { friendReqs, isLoading } = useFriendQuery();
+  const pendingReqs = friendReqs?.pendingReqs || [];
+  const acceptedReqs = friendReqs?.acceptedReqs || [];
 
-  const { data: friendRequests, isLoading } = useQuery({
-    queryKey: ["friendRequests"],
-    queryFn: getFriendRequests,
-  });
-
-  const { mutate: friendRequestsMutation, isPending } = useMutation({
-    mutationFn: getFriendRequests,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
-    },
-  });
-
-  const incomingReqs = friendRequests?.incomingReqs || [];
-  const acceptedReqs = friendRequests?.acceptedReqs || [];
+  const { acceptFriendReq, isPending } = useAcceptFriendReq();
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
-      <div className="container mx-auto max-w-4xl space-y-8">
+      <div className="container mx-auto space-y-8">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-6">
           Notifications
         </h1>
@@ -40,18 +26,18 @@ const NotificationsPage = () => {
           </div>
         ) : (
           <>
-            {incomingReqs?.length > 0 && (
+            {pendingReqs?.length > 0 && (
               <section className="space-y-4">
                 <h2 className="text-xl font-semibold flex items-center gap-2">
                   <UserCheckIcon className="size-5 text-primary" />
                   Friend Requests
                   <span className="badge badge-primary ml-2">
-                    {incomingReqs?.length}
+                    {pendingReqs?.length}
                   </span>
                 </h2>
 
                 <div className="space-y-3">
-                  {incomingReqs.map((request: any) => (
+                  {pendingReqs.map((request: any) => (
                     <div
                       key={request._id}
                       className="card bg-base-200 shadow-sm hover:shadow-md transition-shadow"
@@ -81,7 +67,7 @@ const NotificationsPage = () => {
                       </div>
                       <button
                         className="btn btn-primary btn-sm"
-                        onClick={() => friendRequestsMutation(request._id)}
+                        onClick={() => acceptFriendReq(request._id)}
                         disabled={isPending}
                       >
                         Accept
@@ -100,45 +86,62 @@ const NotificationsPage = () => {
                 </h2>
 
                 <div className="space-y-3">
-                  {acceptedReqs.map((notification: any) => (
-                    <div
-                      key={notification._id}
-                      className="card bg-base-200 shadow-sm"
-                    >
-                      <div className="card-body p-4">
-                        <div className="flex items-start gap-3">
-                          <div className="avatar mt-1 size-10 rounded-full">
-                            <img
-                              src={notification.sender.profilePic}
-                              alt={notification.sender.fullName}
-                            />
+                  {acceptedReqs.map((notification: any) => {
+                    const isSender =
+                      notification?.sender?._id === authUser?._id;
+
+                    return (
+                      <div
+                        key={notification._id}
+                        className="card bg-base-200 shadow-sm"
+                      >
+                        <div className="card-body p-4">
+                          <div className="flex items-start gap-3">
+                            <div className="avatar mt-1 size-10 rounded-full">
+                              <img
+                                src={
+                                  isSender
+                                    ? notification?.recipient?.profilePic
+                                    : notification?.sender?.profilePic
+                                }
+                                alt={
+                                  isSender
+                                    ? notification?.recipient?.fullName
+                                    : notification?.sender?.fullName
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold">
+                              {isSender
+                                ? notification?.recipient?.fullName
+                                : notification?.sender?.fullName}
+                            </h3>
+                            <p className="text-base my-1">
+                              {isSender
+                                ? `${notification?.recipient?.fullName} 
+                              has accepted your friend Request`
+                                : `You have accepted ${notification?.sender?.fullName}'s friend request`}
+                            </p>
+                            <p className="text-sm flex items-center opacity-70">
+                              <ClockIcon className="size-4 mr-2" />
+                              {formatTo12HourDateTime(notification?.updatedAt)}
+                            </p>
+                          </div>
+                          <div className="badge badge-success text-white font-semibold p-4">
+                            <UserPlus2 className="size-4 mr-2" />
+                            New Friend
                           </div>
                         </div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold">
-                            {notification.sender.fullName}
-                          </h3>
-                          <p className="text-sm my-1">
-                            {notification.recipient.fullName} accepted your
-                            friend Request
-                          </p>
-                          <p className="text-xs flex items-center opacity-70">
-                            <ClockIcon className="size-3 mr-1" />
-                            Recently
-                          </p>
-                        </div>
-                        <div className="badge badge-success">
-                          <MessageSquareIcon className="size-3 mr-1" />
-                          New Friend
-                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
             )}
 
-            {incomingReqs?.length === 0 && acceptedReqs?.length === 0 && (
+            {pendingReqs?.length === 0 && acceptedReqs?.length === 0 && (
               <NoNotificationsFound />
             )}
           </>

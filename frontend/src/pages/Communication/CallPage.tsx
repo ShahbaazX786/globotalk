@@ -13,9 +13,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router";
-import PageLoader from "../../components/PageLoader";
+import PageLoader from "../../components/Misc/PageLoader";
 import { getStreamToken } from "../../lib/api/api.chat";
-import useAuthUser from "../../lib/hooks/useAuthUser";
+import useAuthUser from "../../lib/hooks/queries/queries/useAuthQuery";
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 

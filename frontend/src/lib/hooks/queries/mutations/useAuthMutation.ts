@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import type z from "zod";
+import type signupFormSchema from "../../../schema/signup.schema";
 import {
   completeOnboarding,
   loginUser,
   logoutUser,
   signupUser,
-} from "../api/api.auth";
-import type loginFormSchema from "../schema/login.schema";
-import type onboardingFormSchema from "../schema/onboarding.schema";
-import type signupFormSchema from "../schema/signup.schema";
+} from "../../../api/api.auth";
+import type loginFormSchema from "../../../schema/login.schema";
+import type onboardingFormSchema from "../../../schema/onboarding.schema";
 
 const useSignup = () => {
   const queryClient = useQueryClient();

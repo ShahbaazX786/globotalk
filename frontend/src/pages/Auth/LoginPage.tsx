@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ShipWheelIcon } from "lucide-react";
+import { PhoneCall } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import z from "zod";
-import { useLogin } from "../../lib/hooks/useMutations";
+import { useLogin } from "../../lib/hooks/queries/mutations/useAuthMutation";
 import loginFormSchema from "../../lib/schema/login.schema";
 import { useThemeStore } from "../../lib/store/theme.store";
 import { cn } from "../../utils/classMerge";
@@ -32,14 +32,14 @@ const LoginPage = () => {
           className="w-full lg:w-1/2 p-4 sm:p-8 flex flex-col"
         >
           <div className="mb-4 flex justify-start items-center gap-2">
-            <ShipWheelIcon className="size-9 text-primary" />
+            <PhoneCall className="size-9 text-primary" />
             <span className="font-bold font-mono text-3xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider">
               GloboTalk
             </span>
           </div>
 
           {error && (
-            <div className="alert alert-error mb-4">
+            <div className="alert alert-error mb-4 font-bold">
               <span>{error?.response?.data?.message}</span>
             </div>
           )}
