@@ -1,5 +1,7 @@
+import type { sentReqsResponse } from "./Types";
+
 const getTitle = (location: string) => {
-  let baseTitle = "GloboTalk | ";
+  const baseTitle = "GloboTalk | ";
   let title = "";
   if (location.length === 1 && location === "/") {
     title = capitalize("homepage");
@@ -34,4 +36,26 @@ const formatTo12HourDateTime = (isoString: string): string => {
   });
 };
 
-export { formatTo12HourDateTime, getRandomAvatar, getTitle };
+const getSentReqIds = (
+  sentReqs: sentReqsResponse | undefined,
+  userId?: string
+): Set<string> => {
+  if (!sentReqs || !userId) return new Set();
+
+  return new Set(
+    sentReqs.sentFriendReqs
+      .filter(
+        (req) =>
+          String(req.sender) === String(userId) && req.status === "pending"
+      )
+      .map((req) => String(req.recipient._id))
+  );
+};
+
+export {
+  capitalize,
+  formatTo12HourDateTime,
+  getRandomAvatar,
+  getSentReqIds,
+  getTitle,
+};
