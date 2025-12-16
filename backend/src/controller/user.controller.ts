@@ -1,16 +1,21 @@
 import { Response } from "express";
 import FriendRequest from "../model/FriendRequest.js";
 import User from "../model/User.js";
+import mongoose from "mongoose";
 
 const getRecommendations = async (req: any, res: Response) => {
   try {
-    const currentUserId = req.user.id;
-    const currentUser = req.user;
+    console.log(req.user);
+    console.log(req.user.id);
+    const currentUserId = new mongoose.Types.ObjectId(req.user.id);
+    const friendList = req.user.friendList.map(
+      (id: string) => new mongoose.Types.ObjectId(id)
+    );
 
     const recommendedUsers = await User.find({
       $and: [
         { _id: { $ne: currentUserId } },
-        { _id: { $nin: currentUser.friends } },
+        { _id: { $nin: friendList } },
         { isOnboarded: true },
       ],
     });
@@ -28,7 +33,7 @@ const getFriendList = async (req: any, res: Response) => {
       .select("friendList")
       .populate(
         "friendList",
-        "fullName profilePic nativeLanguage learningLanguage"
+        "fullName profilePic nativeLanguage learningLanguage location bio"
       );
 
     res.status(200).json(user?.friendList);
