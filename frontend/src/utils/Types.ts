@@ -1,3 +1,5 @@
+import type { LANGUAGE_TO_FLAG } from "./constants";
+
 type User = {
   _id: string;
   fullName: string;
@@ -25,4 +27,6 @@ type sentFriendReqsType = {
   status: "pending" | "accepted";
 };
 
-export type { sentReqsResponse, sentFriendReqsType, User };
+type SupportedLanguage = keyof typeof LANGUAGE_TO_FLAG;
+
+export type { sentFriendReqsType, sentReqsResponse, SupportedLanguage, User };
