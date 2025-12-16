@@ -43,10 +43,10 @@ Connect globally, practice naturally, and learn faster through real conversation
 ### Project Screenshots
 
 | Signup Page                                     |
-| ------------------------------------------------ |
-| ![Signup Page](ProjectSnaps/ProjectSnap-4.png) |
+| ------------------------------------------------|
+| ![Signup Page](ProjectSnaps/ProjectSnap-4.png)  |
 
-| Signup Page (With Validations)                                    |
+| Signup Page (With Validations)                    |
 | ------------------------------------------------- |
 | ![Plan Selection](ProjectSnaps/ProjectSnap-3.png) |
 
@@ -138,6 +138,7 @@ Start the server
 Frontend
 VITE_STREAM_API_KEY=
 VITE_AVATAR_API_URL=
+VITE_MODE=
 
 Backend:
 PORT
@@ -147,6 +148,7 @@ STREAM_API_SECRET
 JWT_SECRET
 ORIGIN
 AVATAR_API
+NODE_ENV
 ```
 
 ## Feedback
