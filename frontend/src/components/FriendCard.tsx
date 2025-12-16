@@ -2,9 +2,9 @@ import { CheckCircleIcon, MapPin, UserPlusIcon } from "lucide-react";
 import { Link } from "react-router";
 import { useSendFriendReq } from "../lib/hooks/queries/mutations/useFriendMutation";
 import { cn } from "../utils/classMerge";
-import { LANGUAGE_TO_FLAG } from "../utils/constants";
 import { capitalize } from "../utils/helpers";
 import type { User } from "../utils/Types";
+import getLanguageFlag from "./Flag";
 
 const FriendCard = ({
   friend,
@@ -114,23 +114,3 @@ const FriendCard = ({
 };
 
 export default FriendCard;
-
-export const getLanguageFlag = (language?: string) => {
-  if (!language) return null;
-
-  const langLower = language.toLowerCase();
-
-  if (langLower in LANGUAGE_TO_FLAG) {
-    const countryCode = LANGUAGE_TO_FLAG[langLower as LanguageKey];
-
-    return (
-      <img
-        className="size-3 mr-2"
-        src={`https://flagcdn.com/24x18/${countryCode}.png`}
-        alt={`${langLower} flag`}
-      />
-    );
-  }
-
-  return null;
-};

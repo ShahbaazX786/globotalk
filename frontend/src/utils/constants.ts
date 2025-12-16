@@ -194,7 +194,7 @@ const LANGUAGE_TO_FLAG = {
   italian: "it",
   turkish: "tr",
   dutch: "nl",
-};
+} as const;
 
 const PageTitle =
   "GloboTalk - Connect, Converse, Learn, Share, Chat in your favorite language";
