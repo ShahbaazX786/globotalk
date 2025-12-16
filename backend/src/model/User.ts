@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
       type: String,
       default: "",
     },
-    learningLanguages: {
+    learningLanguage: {
       type: String,
       default: "",
     },

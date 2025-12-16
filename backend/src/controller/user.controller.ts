@@ -1,16 +1,21 @@
 import { Response } from "express";
 import FriendRequest from "../model/FriendRequest.js";
 import User from "../model/User.js";
+import mongoose from "mongoose";
 
 const getRecommendations = async (req: any, res: Response) => {
   try {
-    const currentUserId = req.user.id;
-    const currentUser = req.user;
+    console.log(req.user);
+    console.log(req.user.id);
+    const currentUserId = new mongoose.Types.ObjectId(req.user.id);
+    const friendList = req.user.friendList.map(
+      (id: string) => new mongoose.Types.ObjectId(id)
+    );
 
     const recommendedUsers = await User.find({
       $and: [
         { _id: { $ne: currentUserId } },
-        { _id: { $nin: currentUser.friends } },
+        { _id: { $nin: friendList } },
         { isOnboarded: true },
       ],
     });
@@ -28,7 +33,7 @@ const getFriendList = async (req: any, res: Response) => {
       .select("friendList")
       .populate(
         "friendList",
-        "fullName profilePic nativeLanguage learningLanguage"
+        "fullName profilePic nativeLanguage learningLanguage location bio"
       );
 
     res.status(200).json(user?.friendList);
@@ -86,7 +91,7 @@ const acceptFriendRequest = async (req: any, res: Response) => {
 
     if (!friendRequest)
       return res.status(404).json({ message: "Friend request not found" });
-    if (!friendRequest.recipient.toString() !== req.user.id)
+    if (friendRequest.recipient.toString() !== req.user.id.toString())
       return res
         .status(403)
         .json({ message: "You are not authorized to accept this request" });
@@ -98,6 +103,11 @@ const acceptFriendRequest = async (req: any, res: Response) => {
     });
     await User.findByIdAndUpdate(friendRequest.recipient, {
       $addToSet: { friendList: friendRequest.sender },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Friend request accepted",
     });
   } catch (error: any) {
     console.error("Error in acceptFriendRequest controller", error.message);
@@ -116,9 +126,11 @@ const getFriendRequests = async (req: any, res: Response) => {
     );
 
     const acceptedReqs = await FriendRequest.find({
-      recipient: req.user.id,
+      $or: [{ sender: req.user.id }, { recipient: req.user.id }],
       status: "accepted",
-    }).populate("recipient", "fullName profilePic");
+    })
+      .populate("sender", "fullName profilePic")
+      .populate("recipient", "fullName profilePic");
 
     res.status(200).json({ pendingReqs, acceptedReqs });
   } catch (error: any) {
@@ -127,9 +139,9 @@ const getFriendRequests = async (req: any, res: Response) => {
   }
 };
 
-const getOutgoingFriendRequests = async (req: any, res: Response) => {
+const getSentFriendRequests = async (req: any, res: Response) => {
   try {
-    const outgoingReqs = await FriendRequest.find({
+    const sentFriendReqs = await FriendRequest.find({
       sender: req.user.id,
       status: "pending",
     }).populate(
@@ -137,7 +149,7 @@ const getOutgoingFriendRequests = async (req: any, res: Response) => {
       "fullName profilePic nativeLanguage learningLanguage"
     );
 
-    res.status(200).json({ outgoingReqs });
+    res.status(200).json({ sentFriendReqs });
   } catch (error: any) {
     console.error(
       "Error in getOutgoingFriendRequests controller",
@@ -151,7 +163,7 @@ export {
   acceptFriendRequest,
   getFriendList,
   getFriendRequests,
-  getOutgoingFriendRequests,
+  getSentFriendRequests,
   getRecommendations,
   sendFriendRequest,
 };

@@ -1,10 +1,12 @@
+import { config } from "dotenv";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
 import { upsertStreamUser } from "./stream.js";
+config();
 
 const generateAvatar = () => {
-  const idx = Math.floor(Math.random() * 100) + 1;
-  const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
+  const seed = Math.random().toString(36).substring(2);
+  const randomAvatar = `${process.env.AVATAR_API}?seed=${seed}`;
   return randomAvatar;
 };
 
