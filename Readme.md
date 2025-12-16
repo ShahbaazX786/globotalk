@@ -10,7 +10,7 @@
 
 Connect globally, practice naturally, and learn faster through real conversations in a social-media-like experience.
 
-> Live URL: https://comingsoon.com
+> Live URL: https://globotalk.onrender.com
 
 ## Tech Stack
 
