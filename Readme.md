@@ -17,6 +17,7 @@ Connect globally, practice naturally, and learn faster through real conversation
 - React
 - React Router
 - Tailwind
+- Daisy UI
 - Vite (Bundler)
 - Zustand (State Management)
 - Tanstack Query (API State Management)
@@ -29,6 +30,15 @@ Connect globally, practice naturally, and learn faster through real conversation
 - Express
 - Mongoose
 - JWT, Bcrypt.
+
+## Features
+- Authentication System.
+- Social Media like platform.
+- Custom Avatar.
+- 32 Different Themes.
+- Realtime Chat.
+- Realtime Video Call.
+- Realtime Audio Call.
 
 ### Project Screenshots
 
