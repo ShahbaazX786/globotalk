@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { addUserToStream, generateAvatar, generateJWT } from "../lib/utils.js";
 import User from "../model/User.js";
+import { UserDocument } from "../model/User.dto.js";
 
 interface RequestWithUser extends Request {
   user?: UserDocument;
